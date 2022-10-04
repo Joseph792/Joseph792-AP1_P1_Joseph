@@ -1,0 +1,122 @@
+@page "/R_Aportes"
+@page "/R_Aportes/{AporteId:int}"
+@using Models
+
+@inject AportesBLL aportesBll
+
+<EditForm Model="aporte" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h3>Registro de Aportes</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                @*AporteId*@
+                <div class="form-row align-items-center">
+                    <div class="col">
+                        <label>AporteId</label>
+                        <div class="input-group">
+                            <InputNumber @bind-Value="aporte.AporteId" class="form-control col-4" />
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary input-group-text"
+                                    @onclick="Buscar">Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*Fecha*@
+                <div class="col">
+                    <label>Fecha</label>
+                    <InputDate @bind-Value="aporte.Fecha" class="form-control" />
+                </div>
+                @*Persona*@
+                <div class="col">
+                    <label>Persona</label>
+                    <InputText @bind-Value="aporte.Persona" class="form-control" />
+                    <ValidationMessage For="@(() => aporte.Persona)" />
+                </div>
+                @*Observacion*@
+                <div class="col">
+                    <label>Observacion</label>
+                    <InputText @bind-Value="aporte.Observacion" class="form-control" />
+                    <ValidationMessage For="@(() => aporte.Observacion)" />
+                </div>
+                @*Monto*@
+                <div class="col">
+                    <label>Salario</label>
+                    <InputNumber @bind-Value="aporte.Monto" class="form-control" />
+                    <ValidationMessage For="@(() => aporte.Monto)" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="form-group text-center" display: inline-block>
+            <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">Nuevo</button>
+            <button type="submit" class="btn btn-lg btn-success">Guardar</button>
+            <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">Eliminar</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int AporteId { get; set; }
+    private Aportes aporte = new Aportes();
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+
+        Buscar();
+    }
+    public void Nuevo()
+    {
+        aporte = new Aportes();
+    }
+    public void Buscar()
+    {
+        if (aporte.AporteId > 0)
+        {
+            var encontrado = aportesBll.Buscar(aporte.AporteId);
+
+            if (encontrado != null)
+                this.aporte = encontrado;
+            else
+            {
+            }
+        }
+    }
+    void Guardar()
+    {
+        bool guardo;
+
+        aporte.AporteId = 0;
+        guardo = aportesBll.Guardar(aporte);
+
+        if (guardo)
+        {
+            Nuevo();
+        }
+        else
+        {
+        }
+    }
+    void Eliminar()
+    {
+        bool elimino;
+
+        //aporte.AporteId = 1;
+        elimino = aportesBll.Eliminar(aporte);
+
+        if (elimino)
+        {
+            Nuevo();
+        }
+        else
+        {
+
+        }
+    }
+}

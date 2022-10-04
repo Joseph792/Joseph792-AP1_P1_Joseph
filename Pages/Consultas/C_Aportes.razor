@@ -1,0 +1,65 @@
+@page "/C_Aportes"
+@using Models
+@inject AportesBLL aportesBll;
+
+<EditForm Model="lista">
+    <DataAnnotationsValidator />
+
+    <div class="row">
+        <label class="form-control">Filtro</label>
+        <select class="form-control" @bind="Filtro">
+            <option value="1">Persona</option>
+            <option value="2">Fecha</option>
+        </select>
+    </div>
+
+    <label class="form-control">Criterio</label>
+    <input type="text" class="form-control" @bind="Criterio">
+
+    <div>
+        <button type="button" @onclick="Buscar">
+            <i>Buscar</i>
+        </button>
+    </div>
+
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>AporteId</th>
+                <th>Fecha</th>
+                <th>Persona</th>
+                <th>Observacion</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var aporte in lista)
+            {
+                <tr>
+                    <td>@aporte.AporteId</td>
+                    <td>@aporte.Fecha</td>
+                    <td>@aporte.Persona</td>
+                    <td>@aporte.Observacion</td>
+                    <td>@aporte.Monto</td>
+                    <td><a href="aporte/@aporte.AporteId">Ver</a></td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+</EditForm>
+
+@code
+{
+    public string Filtro { get; set; } = "";
+    public string Criterio { get; set; } = "";
+
+    public List<Aportes> lista { get; set; } = new List<Aportes>();
+    public void Buscar()
+    {
+        lista = aportesBll.GetList(o => true);
+    }
+
+}
